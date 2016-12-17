@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>JsPDF Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
+    <style>
+        iframe {
+            width: 50vw;
+            height: 50vh;
+            display: block;
+        }
+        
+        button {
+            margin-top: 1vw;
+            font-size: 20px;
+            padding: 5px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <iframe src="about:blank"></iframe>
+    <button>Download PDF</button>
+    <script>
+        function getQueryItems() {
+            var search = window.location.search,
+                list,
+                map = {};
+
+            if (search.length > 0) {
+                list = search.substr(1).split('&');
+                list.filter(function(item) {
+                    return item.length > 0 && item.search('=') > -1;
+                }).forEach(function(item) {
+                    var split = item.split('=');
+                    map[split[0]] = split[1];
+                });
+            }
+
+            return map;
+
+        }
+
+        function saveDoc() {
+            var d = new Date();
+            doc.save("testPDF_" + d.getTime());
+        }
+
+        var doc = new jsPDF({
+                orientation: 'landscape',
+                unit: 'in',
+                format: [3, 2]
+            }),
+            url,
+            query = getQueryItems(),
+            center = {
+                y: doc.internal.pageSize.height / 2,
+                x: doc.internal.pageSize.width / 2
+            };
+
+        console.log("query:", query);
+
+
+        //add all the stuff to the pdf
+        if (!query.name) {
+            query.name = "Hello World!";
+        }
+
+        doc.text(query.name, center.x, center.y, null, 390, 'center');
+
+
+
+        //make the url
+        url = doc.output('dataurlstring');
+
+        //output Options
+        //arraybuffer
+        //blob
+        //datauristring
+        //datauri
+        //dataurl
+        //dataurlnewwindow
+        //save
+
+
+        //add the iframe
+        document.querySelector('iframe').setAttribute('src', url);
+
+        //add the click event to the button
+        document.querySelector('button').addEventListener('click', saveDoc);
+        document.querySelector('button').addEventListener('touch', saveDoc);
+
+    </script>
+</body>
+
+</html>
