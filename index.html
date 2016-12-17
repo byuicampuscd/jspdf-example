@@ -36,7 +36,7 @@
                     return item.length > 0 && item.search('=') > -1;
                 }).forEach(function(item) {
                     var split = item.split('=');
-                    map[split[0]] = split[1];
+                    map[split[0]] = decodeURIComponent(split[1]);
                 });
             }
 
